@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module: modules/net-lb-app-ext-regional
+values:
+  module.cluster-1.google_container_cluster.cluster:
+    anonymous_authentication_config:
+    - mode: LIMITED
 
-tests:
-  context:
-  server-tls-policy:
+counts:
+  google_container_cluster: 1
