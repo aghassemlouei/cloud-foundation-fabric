@@ -64,8 +64,12 @@ resource "google_dialogflow_cx_security_settings" "default" {
     )
 
     content {
-      gcs_bucket = (
-        google_storage_bucket.bucket.id
+      gcs_bucket = coalesce(
+        try(
+          var.chat_agent_security_configs.audio_export_settings.gcs_bucket_config.id,
+          null
+        ),
+        try(module.audio-export-settings-bucket[0].id, null)
       )
       audio_export_pattern   = var.chat_agent_security_configs.audio_export_settings.audio_export_pattern
       enable_audio_redaction = var.chat_agent_security_configs.audio_export_settings.enable_audio_redaction
@@ -94,13 +98,19 @@ moved {
 module "audio-export-settings-bucket" {
   count = (
     var.chat_agent_security_configs.audio_export_settings == null
-    || try(var.chat_agent_security_configs.audio_export_settings.id, null) != null
+    || try(
+      var.chat_agent_security_configs.audio_export_settings.gcs_bucket_config.id,
+      null
+    ) != null
   ) ? 0 : 1
   source     = "../gcs"
   project_id = var.project_id
   prefix     = var.chat_agent_security_configs.audio_export_settings.gcs_bucket_config.prefix
-  name = try(
-    var.chat_agent_security_configs.audio_export_settings.gcs_bucket_config.prefix,
+  name = coalesce(
+    try(
+      var.chat_agent_security_configs.audio_export_settings.gcs_bucket_config.name,
+      null
+    ),
     var.name
   )
   location = coalesce(
@@ -112,7 +122,7 @@ module "audio-export-settings-bucket" {
 
 resource "google_data_loss_prevention_inspect_template" "default" {
   count = (
-    try(var.engines_configs.chat_engine_config.agent_config.security_settings_config.dlp_inspect_template, null) == null
+    try(var.chat_agent_security_configs.dlp_inspect_template, null) == null
     ? 0 : 1
   )
   template_id  = var.chat_agent_security_configs.dlp_inspect_template.template_id
@@ -130,7 +140,9 @@ resource "google_data_loss_prevention_inspect_template" "default" {
     content_options    = var.chat_agent_security_configs.dlp_inspect_template.content_options
 
     dynamic "info_types" {
-      for_each = try(var.chat_agent_security_configs.dlp_inspect_template.custom_info_types, {})
+      for_each = try(
+        var.chat_agent_security_configs.dlp_inspect_template.info_types, {}
+      )
 
       content {
         name    = info_types.key
@@ -147,9 +159,9 @@ resource "google_data_loss_prevention_inspect_template" "default" {
     }
 
     dynamic "custom_info_types" {
-      for_each = (
-        try(var.chat_agent_security_configs.dlp_inspect_template.info_types,
-        {})
+      for_each = try(
+        var.chat_agent_security_configs.dlp_inspect_template.custom_info_types,
+        {}
       )
       iterator = info_types
 

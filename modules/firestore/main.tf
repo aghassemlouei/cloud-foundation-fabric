@@ -108,10 +108,12 @@ resource "google_firestore_document" "firestore_documents" {
 }
 
 resource "google_firestore_index" "firestore_indexes" {
-  for_each   = var.indexes
-  project    = var.project_id
-  database   = local.firestore_database_name
-  collection = each.value.collection
+  for_each    = var.indexes
+  project     = var.project_id
+  database    = local.firestore_database_name
+  collection  = each.value.collection
+  api_scope   = each.value.api_scope
+  query_scope = each.value.query_scope
   dynamic "fields" {
     for_each = each.value.fields
     content {

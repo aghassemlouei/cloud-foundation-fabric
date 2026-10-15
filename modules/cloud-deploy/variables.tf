@@ -249,6 +249,7 @@ variable "targets" {
       deployment_percentage = string
       predeploy_actions     = optional(list(string))
       postdeploy_actions    = optional(list(string))
+      verify                = optional(bool)
     })), {})
     delivery_pipeline_deploy_parameters = optional(list(object({
       values                 = optional(map(string), null)

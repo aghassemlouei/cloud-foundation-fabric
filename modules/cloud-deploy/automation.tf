@@ -52,8 +52,10 @@ resource "google_clouddeploy_automation" "default" {
         for_each = each.value.promote_release_rule == null ? [] : [""]
 
         content {
-          id                    = each.value.promote_release_rule.id
-          destination_phase     = each.value.promote_release_rule.destination_target_id
+          id = each.value.promote_release_rule.id
+          destination_phase = (
+            each.value.promote_release_rule.destination_phase
+          )
           destination_target_id = each.value.promote_release_rule.destination_target_id
           wait                  = each.value.promote_release_rule.wait
         }

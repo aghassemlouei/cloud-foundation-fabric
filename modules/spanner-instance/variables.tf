@@ -20,7 +20,7 @@ variable "databases" {
     database_dialect       = optional(string)
     ddl                    = optional(list(string), [])
     default_time_zone      = optional(string)
-    deletion_protection    = optional(bool)
+    deletion_protection    = optional(bool, false)
     enable_drop_protection = optional(bool)
     iam                    = optional(map(list(string)), {})
     iam_bindings = optional(map(object({

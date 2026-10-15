@@ -137,7 +137,13 @@ resource "google_gke_hub_feature" "default" {
             referential_rules_enabled  = policycontroller.value.policy_controller_hub_config.referential_rules_enabled
 
             dynamic "deployment_configs" {
-              for_each = policycontroller.value.policy_controller_hub_config.deployment_configs[*]
+              for_each = coalesce(
+                try(
+                  policycontroller.value.policy_controller_hub_config.deployment_configs,
+                  null
+                ),
+                {}
+              )
               content {
                 component = deployment_configs.key
 

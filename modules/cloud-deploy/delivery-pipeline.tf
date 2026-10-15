@@ -88,7 +88,7 @@ resource "google_clouddeploy_delivery_pipeline" "default" {
                         iterator = epc
 
                         content {
-                          percentage = epc.value.percentage
+                          percentage = epc.value.deployment_percentage
                           phase_id   = epc.key
                           verify     = epc.value.verify
 

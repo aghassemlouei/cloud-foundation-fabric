@@ -64,7 +64,7 @@ resource "google_data_catalog_tag_template_iam_binding" "bindings" {
   for_each     = local.tt_iam_bindings
   tag_template = google_data_catalog_tag_template.default[each.value.key].id
   role         = each.value.role
-  members      = each.value.member
+  members      = each.value.members
   dynamic "condition" {
     for_each = each.value.condition == null ? [] : [""]
     content {

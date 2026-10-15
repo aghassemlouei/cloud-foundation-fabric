@@ -32,7 +32,7 @@ locals {
 resource "google_cloudbuildv2_connection" "connection" {
   count       = var.connection_create ? 1 : 0
   location    = var.location
-  project     = var.project_id
+  project     = local.project_id
   name        = var.name
   annotations = var.annotations
   disabled    = var.disabled
@@ -170,4 +170,7 @@ resource "google_cloudbuild_trigger" "triggers" {
   substitutions      = each.value.substitutions
   service_account    = each.value.service_account
   filename           = each.value.filename
+  approval_config {
+    approval_required = each.value.approval_required
+  }
 }

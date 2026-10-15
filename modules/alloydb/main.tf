@@ -253,9 +253,17 @@ resource "google_alloydb_instance" "primary" {
       allowed_consumer_projects = local.allowed_consumer_projects
 
       dynamic "psc_interface_configs" {
-        for_each = (try(var.network_config.psc_config.psc_interface_configs, null) != null ? [""] : [])
+        for_each = (
+          try(
+            var.network_config.psc_config.network_attachment_uri, null
+          ) != null
+          ? [""]
+          : []
+        )
         content {
-          network_attachment_resource = try(var.network_config.psc_config.psc_interface_configs.network_attachment_resource, null)
+          network_attachment_resource = try(
+            var.network_config.psc_config.network_attachment_uri, null
+          )
         }
       }
 
@@ -428,11 +436,14 @@ resource "google_alloydb_instance" "secondary" {
   availability_type = var.availability_type
   cluster           = google_alloydb_cluster.secondary[0].id
   database_flags    = var.cross_region_replication.promote_secondary || var.cross_region_replication.switchover_mode ? var.flags : null
-  display_name      = coalesce(var.cross_region_replication.secondary_instance_name, local.secondary_instance_name)
-  gce_zone          = local.is_regional ? null : var.gce_zone
-  instance_id       = local.secondary_instance_name
-  instance_type     = local.secondary_instance_type
-  labels            = var.labels
+  display_name = coalesce(
+    var.cross_region_replication.secondary_instance_display_name,
+    local.secondary_instance_name
+  )
+  gce_zone      = local.is_regional ? null : var.gce_zone
+  instance_id   = local.secondary_instance_name
+  instance_type = local.secondary_instance_type
+  labels        = var.labels
 
   dynamic "client_connection_config" {
     for_each = local.require_connectors != null || local.ssl_mode != null ? [""] : []
@@ -482,9 +493,17 @@ resource "google_alloydb_instance" "secondary" {
       allowed_consumer_projects = local.allowed_consumer_projects
 
       dynamic "psc_interface_configs" {
-        for_each = (try(var.network_config.psc_config.psc_interface_configs, null) != null ? [""] : [])
+        for_each = (
+          try(
+            var.network_config.psc_config.network_attachment_uri, null
+          ) != null
+          ? [""]
+          : []
+        )
         content {
-          network_attachment_resource = try(var.network_config.psc_config.psc_interface_configs.network_attachment_resource, null)
+          network_attachment_resource = try(
+            var.network_config.psc_config.network_attachment_uri, null
+          )
         }
       }
 
@@ -576,9 +595,17 @@ resource "google_alloydb_instance" "read_pool_primary" {
       allowed_consumer_projects = local.allowed_consumer_projects
 
       dynamic "psc_interface_configs" {
-        for_each = (try(var.network_config.psc_config.psc_interface_configs, null) != null ? [""] : [])
+        for_each = (
+          try(
+            var.network_config.psc_config.network_attachment_uri, null
+          ) != null
+          ? [""]
+          : []
+        )
         content {
-          network_attachment_resource = try(var.network_config.psc_config.psc_interface_configs.network_attachment_resource, null)
+          network_attachment_resource = try(
+            var.network_config.psc_config.network_attachment_uri, null
+          )
         }
       }
 
@@ -681,9 +708,17 @@ resource "google_alloydb_instance" "read_pool_secondary" {
       allowed_consumer_projects = local.allowed_consumer_projects
 
       dynamic "psc_interface_configs" {
-        for_each = (try(var.network_config.psc_config.psc_interface_configs, null) != null ? [""] : [])
+        for_each = (
+          try(
+            var.network_config.psc_config.network_attachment_uri, null
+          ) != null
+          ? [""]
+          : []
+        )
         content {
-          network_attachment_resource = try(var.network_config.psc_config.psc_interface_configs.network_attachment_resource, null)
+          network_attachment_resource = try(
+            var.network_config.psc_config.network_attachment_uri, null
+          )
         }
       }
 
