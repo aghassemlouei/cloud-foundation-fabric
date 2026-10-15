@@ -68,7 +68,7 @@ variable "bundle_config" {
         )
         ||
         # local folder
-        length(fileset(pathexpand(var.bundle_config.path), "**/*")) > 0
+        length(try(fileset(pathexpand(var.bundle_config.path), "**/*"), [])) > 0
         ||
         # local ZIP archive
         (

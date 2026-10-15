@@ -69,6 +69,8 @@ resource "google_spanner_instance" "spanner_instance" {
       dynamic "autoscaling_limits" {
         for_each = var.instance.autoscaling.limits == null ? [] : [""]
         content {
+          max_nodes            = var.instance.autoscaling.limits.max_nodes
+          min_nodes            = var.instance.autoscaling.limits.min_nodes
           max_processing_units = var.instance.autoscaling.limits.max_processing_units
           min_processing_units = var.instance.autoscaling.limits.min_processing_units
         }
@@ -93,10 +95,11 @@ resource "google_spanner_database" "spanner_databases" {
   project                  = var.project_id
   instance                 = local.spanner_instance.name
   name                     = each.key
+  database_dialect         = each.value.database_dialect
   ddl                      = each.value.ddl
   default_time_zone        = each.value.default_time_zone
   enable_drop_protection   = each.value.enable_drop_protection
-  deletion_protection      = false
+  deletion_protection      = each.value.deletion_protection
   version_retention_period = each.value.version_retention_period
   dynamic "encryption_config" {
     for_each = each.value.kms_key_name == null ? [] : [""]

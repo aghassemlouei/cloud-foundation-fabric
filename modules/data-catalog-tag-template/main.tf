@@ -56,7 +56,7 @@ resource "google_data_catalog_tag_template" "default" {
   for_each = local.tag_templates
   project  = var.project_id
   region = lookup(
-    var.factories_config,
+    var.factories_config.context.regions,
     coalesce(each.value.region, var.region),
     coalesce(each.value.region, var.region)
   )

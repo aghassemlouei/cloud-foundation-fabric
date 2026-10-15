@@ -158,8 +158,8 @@ variable "repositories" {
       alltrue([for k2, v2 in v1.triggers :
         contains(["COMMENTS_DISABLED",
           "COMMENTS_ENABLED", "COMMENTS_ENABLED_FOR_EXTERNAL_CONTRIBUTORS_ONLY"],
-    try(v2.push.comment_control, "COMMENTS_DISABLED"))])])
-    error_message = "Possible values for include_build_logs are: COMMENTS_DISABLED, COMMENTS_ENABLED, COMMENTS_ENABLED_FOR_EXTERNAL_CONTRIBUTORS_ONLY."
+    try(v2.pull_request.comment_control, "COMMENTS_DISABLED"))])])
+    error_message = "Possible values for comment_control are: COMMENTS_DISABLED, COMMENTS_ENABLED, COMMENTS_ENABLED_FOR_EXTERNAL_CONTRIBUTORS_ONLY."
   }
 
   validation {
