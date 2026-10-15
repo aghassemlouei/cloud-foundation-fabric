@@ -30,15 +30,15 @@ locals {
   ]...)
   workstation_config_iam_bindings = merge([
     for k1, v1 in local.workstation_configs : {
-      for k2, v2 in v1.iam_bindings : "${k1}-${k2}" => merge(v2, {
-        workstation_config_id = k1
+      for k2, v2 in v1.iam_bindings : "${k1}-${k2}" => merge({ condition = null }, v2, {
+        workstation_config_id                                            = k1
       })
     }
   ]...)
   workstation_config_iam_bindings_additive = merge([
     for k1, v1 in local.workstation_configs : {
-      for k2, v2 in v1.iam_bindings_additive : "${k1}-${k2}" => merge(v2, {
-        workstation_config_id = k1
+      for k2, v2 in v1.iam_bindings_additive : "${k1}-${k2}" => merge({ condition = null }, v2, {
+        workstation_config_id                                                     = k1
       })
     }
   ]...)
@@ -57,9 +57,9 @@ locals {
   workstation_iam_bindings = merge(flatten([
     for k1, v1 in local.workstation_configs : [
       for k2, v2 in v1.workstations : {
-        for k3, v3 in v2.iam_bindings : "${k1}-${k2}-${k3}" => merge(v3, {
-          workstation_config_id = k1
-          workstation_id        = k2
+        for k3, v3 in v2.iam_bindings : "${k1}-${k2}-${k3}" => merge({ condition = null }, v3, {
+          workstation_config_id                                                  = k1
+          workstation_id                                                         = k2
         })
       }
     ]
@@ -67,9 +67,9 @@ locals {
   workstation_iam_bindings_additive = merge(flatten([
     for k1, v1 in local.workstation_configs : [
       for k2, v2 in v1.workstations : {
-        for k3, v3 in v2.iam_bindings_additive : "${k1}-${k2}-${k3}" => merge(v3, {
-          workstation_config_id = k1
-          workstation_id        = k2
+        for k3, v3 in v2.iam_bindings_additive : "${k1}-${k2}-${k3}" => merge({ condition = null }, v3, {
+          workstation_config_id                                                           = k1
+          workstation_id                                                                  = k2
         })
       }
     ]
@@ -100,6 +100,14 @@ resource "google_workstations_workstation_config_iam_binding" "bindings" {
   members = [
     for v in each.value.members : lookup(local.ctx.iam_principals, v, v)
   ]
+  dynamic "condition" {
+    for_each = each.value.condition == null ? [] : [""]
+    content {
+      expression  = templatestring(each.value.condition.expression, var.context.condition_vars)
+      title       = each.value.condition.title
+      description = try(each.value.condition.description, null)
+    }
+  }
 }
 
 resource "google_workstations_workstation_config_iam_member" "bindings" {
@@ -113,6 +121,14 @@ resource "google_workstations_workstation_config_iam_member" "bindings" {
   member = lookup(
     local.ctx.iam_principals, each.value.member, each.value.member
   )
+  dynamic "condition" {
+    for_each = each.value.condition == null ? [] : [""]
+    content {
+      expression  = templatestring(each.value.condition.expression, var.context.condition_vars)
+      title       = each.value.condition.title
+      description = try(each.value.condition.description, null)
+    }
+  }
 }
 
 resource "google_workstations_workstation_iam_binding" "authoritative" {
@@ -141,6 +157,14 @@ resource "google_workstations_workstation_iam_binding" "bindings" {
   members = [
     for v in each.value.members : lookup(local.ctx.iam_principals, v, v)
   ]
+  dynamic "condition" {
+    for_each = each.value.condition == null ? [] : [""]
+    content {
+      expression  = templatestring(each.value.condition.expression, var.context.condition_vars)
+      title       = each.value.condition.title
+      description = try(each.value.condition.description, null)
+    }
+  }
 }
 
 resource "google_workstations_workstation_iam_member" "bindings" {
@@ -155,4 +179,12 @@ resource "google_workstations_workstation_iam_member" "bindings" {
   member = lookup(
     local.ctx.iam_principals, each.value.member, each.value.member
   )
+  dynamic "condition" {
+    for_each = each.value.condition == null ? [] : [""]
+    content {
+      expression  = templatestring(each.value.condition.expression, var.context.condition_vars)
+      title       = each.value.condition.title
+      description = try(each.value.condition.description, null)
+    }
+  }
 }
