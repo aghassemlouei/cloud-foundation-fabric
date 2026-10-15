@@ -174,8 +174,9 @@ resource "google_compute_url_map" "default" {
           : [route_action.value.url_rewrite]
         )
         content {
-          host_rewrite        = url_rewrite.value.host
-          path_prefix_rewrite = url_rewrite.value.path_prefix
+          host_rewrite          = url_rewrite.value.host
+          path_prefix_rewrite   = url_rewrite.value.path_prefix
+          path_template_rewrite = url_rewrite.value.path_template
         }
       }
       dynamic "weighted_backend_services" {
@@ -423,8 +424,9 @@ resource "google_compute_url_map" "default" {
               : [route_action.value.url_rewrite]
             )
             content {
-              host_rewrite        = url_rewrite.value.host
-              path_prefix_rewrite = url_rewrite.value.path_prefix
+              host_rewrite          = url_rewrite.value.host
+              path_prefix_rewrite   = url_rewrite.value.path_prefix
+              path_template_rewrite = url_rewrite.value.path_template
             }
           }
           dynamic "weighted_backend_services" {
@@ -657,8 +659,9 @@ resource "google_compute_url_map" "default" {
                   : [route_action.value.url_rewrite]
                 )
                 content {
-                  host_rewrite        = url_rewrite.value.host
-                  path_prefix_rewrite = url_rewrite.value.path_prefix
+                  host_rewrite          = url_rewrite.value.host
+                  path_prefix_rewrite   = url_rewrite.value.path_prefix
+                  path_template_rewrite = url_rewrite.value.path_template
                 }
               }
               dynamic "weighted_backend_services" {

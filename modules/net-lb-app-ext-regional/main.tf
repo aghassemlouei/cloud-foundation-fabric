@@ -75,7 +75,7 @@ resource "google_compute_region_target_http_proxy" "default" {
   region                      = local.region
   name                        = coalesce(var.http_proxy_config.name, var.name)
   description                 = var.http_proxy_config.description
-  http_keep_alive_timeout_sec = var.https_proxy_config.http_keepalive_timeout
+  http_keep_alive_timeout_sec = var.http_proxy_config.http_keepalive_timeout
   url_map                     = google_compute_region_url_map.default.id
 }
 
@@ -86,7 +86,9 @@ resource "google_compute_region_target_https_proxy" "default" {
   region                           = local.region
   description                      = var.https_proxy_config.description
   certificate_manager_certificates = var.https_proxy_config.certificate_manager_certificates
+  certificate_map                  = var.https_proxy_config.certificate_map
   http_keep_alive_timeout_sec      = var.https_proxy_config.http_keepalive_timeout
+  quic_override                    = var.https_proxy_config.quic_override
   server_tls_policy                = var.https_proxy_config.server_tls_policy
   ssl_certificates                 = length(local.proxy_ssl_certificates) == 0 ? null : local.proxy_ssl_certificates
   ssl_policy                       = var.https_proxy_config.ssl_policy

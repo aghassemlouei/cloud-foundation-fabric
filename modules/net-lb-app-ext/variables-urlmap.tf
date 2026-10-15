@@ -160,8 +160,9 @@ variable "urlmap_config" {
           nanos   = optional(number)
         }))
         url_rewrite = optional(object({
-          host        = optional(string)
-          path_prefix = optional(string)
+          host          = optional(string)
+          path_prefix   = optional(string)
+          path_template = optional(string)
         }))
         weighted_backend_services = optional(map(object({
           weight = number
@@ -215,12 +216,12 @@ variable "urlmap_config" {
           request_mirror_backend = optional(string)
           cors_policy = optional(object({
             allow_credentials    = optional(bool)
-            allow_headers        = optional(string)
-            allow_methods        = optional(string)
-            allow_origin_regexes = list(string)
-            allow_origins        = list(string)
+            allow_headers        = optional(list(string))
+            allow_methods        = optional(list(string))
+            allow_origin_regexes = optional(list(string))
+            allow_origins        = optional(list(string))
             disabled             = optional(bool)
-            expose_headers       = optional(string)
+            expose_headers       = optional(list(string))
             max_age              = optional(string)
           }))
           fault_injection_policy = optional(object({
@@ -249,8 +250,9 @@ variable "urlmap_config" {
             nanos   = optional(number)
           }))
           url_rewrite = optional(object({
-            host        = optional(string)
-            path_prefix = optional(string)
+            host          = optional(string)
+            path_prefix   = optional(string)
+            path_template = optional(string)
           }))
           weighted_backend_services = optional(map(object({
             weight = number
@@ -330,12 +332,12 @@ variable "urlmap_config" {
           request_mirror_backend = optional(string)
           cors_policy = optional(object({
             allow_credentials    = optional(bool)
-            allow_headers        = optional(string)
-            allow_methods        = optional(string)
-            allow_origin_regexes = list(string)
-            allow_origins        = list(string)
+            allow_headers        = optional(list(string))
+            allow_methods        = optional(list(string))
+            allow_origin_regexes = optional(list(string))
+            allow_origins        = optional(list(string))
             disabled             = optional(bool)
-            expose_headers       = optional(string)
+            expose_headers       = optional(list(string))
             max_age              = optional(string)
           }))
           fault_injection_policy = optional(object({
